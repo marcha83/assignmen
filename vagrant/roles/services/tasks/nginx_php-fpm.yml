@@ -1,0 +1,50 @@
+- name: Install epel repos
+  yum: name=epel-release state=present
+
+- name: Install nginx, php-fpm, mysql..
+  yum: name={{ item }} state=present
+  with_items:
+   - nginx
+   - php
+   - php-fpm
+   - php-cli
+   - php-curl
+   - php-gd
+   - php-mbstring
+   - php-mysql
+   - php-xml
+   - mysql 
+   - mysql-server
+
+- name: Create self-signed certificate
+  shell: |
+    openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 \
+    -subj "/C=HR/ST=Zagreb/L=Zagreb/O=IT/CN={{ domain_name }}.localhost" \
+    -keyout /etc/nginx/{{ domain_name }}.key  -out /etc/nginx/{{ domain_name }}.cert
+    chmod 0640 /etc/nginx/{{ domain_name }}.key
+
+- name: Create document root dir.
+  file: path=/var/www/html/{{ domain_name }}  state=directory owner=nginx group=nginx mode=0750
+
+- name: Copy PHP content
+  unarchive: src=content.tar.gz dest=/var/www/html/{{ domain_name }} owner=nginx group=nginx 
+
+- name: Backup nginx default.conf
+  shell: |
+    mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.back
+  ignore_errors: True
+  notify: restart nginx
+
+- name: Template nginx server block
+  template: src=nginx_block.j2 dest=/etc/nginx/conf.d/{{ domain_name }}.conf mode=0644
+  notify: restart nginx
+        
+- name: Copy nginx.conf file
+  copy: src=nginx.conf dest=/etc/nginx/nginx.conf mode=0644 owner=root group=nginx
+  notify: restart nginx   
+
+- name: Change user in /etc/php-fpm.d/www.conf
+  shell: |
+    sed -i s/'user = apache'/'user = nginx'/ /etc/php-fpm.d/www.conf
+    sed -i s/'group = apache'/'group = nginx'/ /etc/php-fpm.d/www.conf
+  notify: restart php-fpm
