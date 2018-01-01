@@ -3,5 +3,6 @@
   sudo: true
   vars:
     domain_name: assignment
+    php_fpm_pool: assignmentpool
   roles:
     - services

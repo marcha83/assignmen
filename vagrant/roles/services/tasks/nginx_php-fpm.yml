@@ -23,19 +23,31 @@
     -keyout /etc/nginx/{{ domain_name }}.key  -out /etc/nginx/{{ domain_name }}.cert
     chmod 0640 /etc/nginx/{{ domain_name }}.key
 
+- name: Create php-fpm pool user
+  user: name={{ php_fpm_pool }} comment="php-fpm pool user" shell=/sbin/nologin
+
+- name: Add nginx user to {{ php_fpm_pool }} group
+  user: name=nginx groups={{ php_fpm_pool }}
+
 - name: Create document root dir.
-  file: path=/var/www/html/{{ domain_name }}  state=directory owner=nginx group=nginx mode=0750
+  file: path=/var/www/html/{{ domain_name }}  state=directory owner={{ php_fpm_pool }} group={{ php_fpm_pool }} mode=0750
 
 - name: Copy PHP content
-  unarchive: src=content.tar.gz dest=/var/www/html/{{ domain_name }} owner=nginx group=nginx 
+  unarchive: src=content.tar.gz dest=/var/www/html/{{ domain_name }} owner={{ php_fpm_pool }} group={{ php_fpm_pool }} 
 
-- name: Backup nginx default.conf
+- name: Backup nginx default.conf file
   shell: |
     mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.back
   ignore_errors: True
   notify: restart nginx
 
-- name: Template nginx server block
+- name: Backup php-fpm default pool www.conf file
+  shell: |
+    mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.conf.back
+  ignore_errors: True
+  notify: restart php-fpm
+
+- name: Setup template nginx server block
   template: src=nginx_block.j2 dest=/etc/nginx/conf.d/{{ domain_name }}.conf mode=0644
   notify: restart nginx
         
@@ -43,8 +55,12 @@
   copy: src=nginx.conf dest=/etc/nginx/nginx.conf mode=0644 owner=root group=nginx
   notify: restart nginx   
 
-- name: Change user in /etc/php-fpm.d/www.conf
-  shell: |
-    sed -i s/'user = apache'/'user = nginx'/ /etc/php-fpm.d/www.conf
-    sed -i s/'group = apache'/'group = nginx'/ /etc/php-fpm.d/www.conf
+- name: Setup template php-fpm pool file
+  template: src=pool.conf.j2 dest=/etc/php-fpm.d/{{ php_fpm_pool }}.conf mode=0644 owner=root group=root
   notify: restart php-fpm
+
+#- name: Change user in /etc/php-fpm.d/www.conf
+#  shell: |
+#    sed -i s/'user = apache'/'user = nginx'/ /etc/php-fpm.d/www.conf
+#    sed -i s/'group = apache'/'group = nginx'/ /etc/php-fpm.d/www.conf
+#  notify: restart php-fpm

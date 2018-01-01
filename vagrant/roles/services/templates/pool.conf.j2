@@ -1,0 +1,25 @@
+[{{ php_fpm_pool }}]
+
+listen = /var/run/php-fpm/{{ php_fpm_pool }}.sock
+
+listen.owner = {{ php_fpm_pool }}
+listen.group = {{ php_fpm_pool }}
+listen.mode = 0664
+
+user = {{ php_fpm_pool }}
+group = {{ php_fpm_pool }}
+
+pm = ondemand
+pm.max_children = 5
+pm.process_idle_timeout = 10s
+pm.max_requests = 200
+
+request_slowlog_timeout = 5
+slowlog = /var/log/php-fpm/{{ php_fpm_pool }}-slow.log
+
+php_admin_value[error_log] = /var/log/php-fpm/{{ php_fpm_pool }}-error.log
+php_admin_flag[log_errors] = on
+
+php_value[session.save_handler] = files
+php_value[session.save_path] = /var/lib/php/session
+
