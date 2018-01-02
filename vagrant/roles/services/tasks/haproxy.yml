@@ -1,0 +1,23 @@
+- name: Copy newer HAproxy package
+  copy: src={{ item }} dest=/tmp/
+  with_items:
+     - lua53-libs-5.3.4-2.el6.pp.i686.rpm
+     - haproxy-1.7.8-1.el6.pp.i686.rpm 
+
+- name: Install HAproxy
+  yum: name=/tmp/{{ item }} state=present
+  with_items:
+     - lua53-libs-5.3.4-2.el6.pp.i686.rpm
+     - haproxy-1.7.8-1.el6.pp.i686.rpm
+
+- name: Convert certs and key to one pem file
+  shell: |
+    cat /etc/nginx/{{ domain_name }}.cert /etc/nginx/{{ domain_name }}.key > /etc/haproxy/{{ domain_name }}_front.pem
+    chmod 640 /etc/haproxy/{{ domain_name }}_front.pem
+
+- name: Copy ssl-dh-param-file
+  copy: src=dhparams.pem dest=/etc/haproxy/ 
+
+- name: Setup template HAproxy config file
+  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg mode=0644 owner=root group=root
+  notify: restart haproxy
