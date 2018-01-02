@@ -24,9 +24,9 @@ ansible provision  setup that include services:
 #  Requirements
 
 Install on host machine: 
-        - virtualbox (2.0 and up)
-        - vagrant (5.2 and up)
-        - ansible (2.3 and up)
+- virtualbox (2.0 and up)
+- vagrant (5.2 and up)
+- ansible (2.3 and up)
 
 
 # Usage
@@ -42,8 +42,8 @@ Install on host machine:
 3. setup ansible variables under playbook.yml (if you wish to change), e.g.
 
     vars:
-       domain_name: assignment   -->  URL domain name 
-       php_fpm_pool: assignmentpool  -->  php-fpm pool web application setup 
+      - domain_name: assignment   -->  URL domain name 
+      - php_fpm_pool: assignmentpool  -->  php-fpm pool web application setup 
 
 3. vagrant up
 
