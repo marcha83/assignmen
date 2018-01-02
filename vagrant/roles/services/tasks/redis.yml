@@ -1,0 +1,11 @@
+- name: Install redis
+  yum: name=redis state=present
+
+- name: Service redis started and initlevel enabled
+  service: name=redis state=restarted enabled=yes
+
+- name: Copy script 
+  copy: src=script.sh dest=/root/ mode=0750 owner=root group=root
+
+- name: Crontab setup
+  cron: name='Redis script to load some value every 5 min' user=root minute="*/5" job="/root/script.sh" backup=yes

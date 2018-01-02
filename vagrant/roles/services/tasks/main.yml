@@ -1,3 +1,4 @@
 ---
 - include: nginx_php-fpm.yml
 - include: haproxy.yml
+- include: redis.yml
