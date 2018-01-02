@@ -3,22 +3,22 @@
 vagrant setup with CentOS 6 (i386) image for VirtualBox virtualizer
 ansible provision  setup that include services:
 - HAproxy:
-        - SSL frontend temination with self-signed certificate
-        - only TLS protocol, strong ciphers, with generated DH key and enabled HSTS
-        - SSL backend to nginx server
+      * SSL frontend temination with self-signed certificate 
+      * only TLS protocol, strong ciphers, with generated DH key and enabled HSTS 
+      * SSL backend to nginx server 
 
 - nginx:
-        - separate server block
-        - SSL with self-signed certificate
-        - example of microcaching with exclude caching areas
-        - example of configuration security headers, deny access to important files and folders
+      * separate server block
+      * SSL with self-signed certificate
+      * example of microcaching with exclude caching areas
+      * example of configuration security headers, deny access to important files and folders
 
 - pgp-fpm:
-        - separate pool for php web aplication
-        - process management (ondemand setup) with number of workers, timeout..
+      * separate pool for php web aplication
+      * process management (ondemand setup) with number of workers, timeout..
 
 - redis:
-        - basic redis setup with crontab script that load some key value
+      * basic redis setup with crontab script that load some key value
 
 
 #  Requirements
@@ -90,9 +90,9 @@ https://ip_address_host_machine:8443/test.html  -->  deny (return 403)
 
 Best option for process management depends on application usage and request load. 
 
-Static, best for: single pool running single app/group of apps.
-Dynamic, best for: multiple pools, all/most of them handling 10k+ requests/day
-On demand, best for: large number of pools, many of which handle very low load (few hundred requests/day or less) 
+    - Static, best for: single pool running single app/group of apps.
+    - Dynamic, best for: multiple pools, all/most of them handling 10k+ requests/day
+    - Ondemand, best for: large number of pools, many of which handle very low load (few hundred requests/day or less) 
 
 For this testing example and not 'heavy' application I choose ondemand setup, because it dosen't alocate all resources after starting php-fpm services but spawns them as they are needed.
 
