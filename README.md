@@ -1,23 +1,23 @@
 # This project cover testing example:
 
-vagrant setup with CentOS 6 (i386) image for VirtualBox virtualizer
-ansible provision  setup that include services:
-- HAproxy:
+- vagrant setup with CentOS 6 (i386) image for VirtualBox virtualizer
+- ansible provision  setup that include services:
+  - HAproxy:
       * SSL frontend temination with self-signed certificate 
       * only TLS protocol, strong ciphers, with generated DH key and enabled HSTS 
       * SSL backend to nginx server 
 
-- nginx:
+  - nginx:
       * separate server block
       * SSL with self-signed certificate
       * example of microcaching with exclude caching areas
       * example of configuration security headers, deny access to important files and folders
 
-- pgp-fpm:
+  - pgp-fpm:
       * separate pool for php web aplication
       * process management (ondemand setup) with number of workers, timeout..
 
-- redis:
+  - redis:
       * basic redis setup with crontab script that load some key value
 
 
