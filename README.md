@@ -1,4 +1,4 @@
-# This project cover testing example:
+# This project covers testing examples of vagrant (virtualbox/CentOS6) + ansible playbooks (HAproxy/nginx/php-fpm/redis):
 
 - vagrant setup with CentOS 6 (i386) image for VirtualBox virtualizer
 - ansible provision  setup that include services:
@@ -13,7 +13,7 @@
       * example of microcaching with exclude caching areas
       * example of configuration security headers, deny access to important files and folders
 
-  - pgp-fpm:
+  - php-fpm:
       * separate pool for php web aplication
       * process management (ondemand setup) with number of workers, timeout..
 
