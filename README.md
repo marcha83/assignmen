@@ -1,4 +1,4 @@
-# This project covers testing examples of vagrant (virtualbox/CentOS6) + ansible playbooks (HAproxy/nginx/php-fpm/redis):
+# This repo covers testing examples of vagrant (virtualbox/CentOS6) + ansible playbooks (HAproxy/nginx/php-fpm/redis):
 
 - vagrant setup with CentOS 6 (i386) image for VirtualBox virtualizer
 - ansible provision  setup that include services:
